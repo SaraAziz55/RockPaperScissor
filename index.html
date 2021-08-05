@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock, Paper, Scissors</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32 (1).png">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="/style.css">
+    <style>
+      :root {
+    --Scissors-Gradient: radial-gradient(hsl(39, 89%, 49%), hsl(40, 84%, 53%));
+    --Paper-Gradient: radial-gradient(hsl(230, 89%, 62%), hsl(230, 89%, 65%));
+    --Rock-Gradient: radial-gradient(hsl(349, 71%, 52%), hsl(349, 70%, 56%));
+    --Cyan: hsl(189, 59%, 53%) to hsl(189, 58%, 57%);
+    --Dark-Text: hsl(229, 25%, 31%);
+    --Score-Text: hsl(229, 64%, 46%);
+    --Header-Outline: hsl(217, 16%, 45%);
+    --Radial-Gradient: radial-gradient(
+      circle,
+      hsl(214, 47%, 23%),
+      hsl(237, 49%, 15%)
+    );
+  }
+  
+  body {
+    font-family: "Barlow Semi Condensed", sans-serif;
+    margin: 0;
+    background: var(--Radial-Gradient);
+    color: #fff;
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    padding-top: 40px;
+    box-sizing: border-box;
+  }
+  
+  .container {
+    width: 90%;
+    margin: auto;
+    height: 100vh;
+  }
+  p {
+    margin: 2px 0px;
+  }
+  
+  p.scoreText {
+    text-align: center;
+    color: var(--Score-Text);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+  }
+  
+  .space {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  #score {
+    color: var(--Header-Outline);
+    font-weight: 700;
+    font-size: 2rem;
+    animation-duration: 0.3s;
+    animation-delay: 1.3s;
+    animation-fill-mode: forwards;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1.8px solid var(--Header-Outline);
+    border-radius: 8px;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .scoreBoard {
+    background: #fff;
+    padding: 5px 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  main {
+    max-width: 500px;
+    margin: auto;
+    padding: 30px 0px;
+  }
+  
+  .init {
+    width: 85%;
+    margin: auto;
+    position: relative;
+  }
+  
+  .top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .bottom {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .paper {
+    height: 200px;
+    width: 200px;
+    background: var(--Paper-Gradient);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .scissors {
+    height: 200px;
+    width: 200px;
+    background: var(--Scissors-Gradient);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .rock {
+    height: 200px;
+    width: 200px;
+    background: var(--Rock-Gradient);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .innerBorder {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .triangle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: -1;
+  }
+  
+  .button {
+    text-align: right;
+  }
+  
+  button {
+    padding: 8px 25px;
+    border: 1.8px solid var(--Header-Outline);
+    background: transparent;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .rules {
+    border-radius: 8px;
+    margin: auto;
+    width: 450px;
+    padding: 30px;
+    background: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -300%);
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    z-index: 5;
+    box-sizing: border-box;
+  }
+  
+  h3 {
+    margin: 1px;
+    color: var(--Dark-Text);
+    font-size: 1.9rem;
+  }
+  .rules .image img {
+    display: flex;
+    justify-content: center;
+    padding: 30px 0px;
+    width: 90%;
+    margin: auto;
+    width: 100%;
+  }
+  
+  @keyframes drop {
+    0% {
+      transform: translate(-50%, -300%);
+    }
+    100% {
+      transform: translate(-50%, -50%);
+    }
+  }
+  
+  @keyframes slideUp {
+    0% {
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      transform: translate(-50%, -300%);
+    }
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #222;
+    opacity: 0.7;
+    transition: opacity 0.8s ease-in;
+    display: none;
+    z-index: 2;
+  }
+  
+  .close {
+    cursor: pointer;
+  }
+  
+  .space2 {
+    display: flex;
+    justify-content: space-between;
+  }
+  .after {
+    max-width: 450px;
+    margin: auto;
+    font-size: 1.3rem;
+    padding: 30px 0px;
+    display: none;
+    animation-delay: 2s;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    position: relative;
+  }
+  .after .space2 {
+    font-size: 1.2rem;
+  }
+  
+  .after p {
+    text-align: center;
+  }
+  
+  .computer {
+    z-index: 1;
+  }
+  
+  .player {
+    z-index: 1;
+  }
+  
+  .computer .image {
+    opacity: 0;
+    animation-delay: 1s;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .player .image {
+    display: flex;
+    justify-content: center;
+  }
+  .player-win .wave-1 {
+    position: absolute;
+    border-radius: 50%;
+    height: 230px;
+    width: 230px;
+    background: #222;
+    top: 68px;
+    left: -15px;
+    z-index: -1;
+    opacity: 0.5;
+  }
+  .after .active-1 {
+    animation-name: waves;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-delay: 0.1s;
+  }
+  .player-win .wave-2 {
+    position: absolute;
+    border-radius: 50%;
+    height: 270px;
+    width: 270px;
+    background: #222;
+    top: 45px;
+    left: -35px;
+    z-index: -2;
+    opacity: 0.3;
+  }
+  .after .active-2 {
+    animation-name: waves;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-delay: 0.6s;
+  }
+  .player-win .wave-3 {
+    position: absolute;
+    border-radius: 50%;
+    height: 300px;
+    width: 300px;
+    background: #222;
+    top: 30px;
+    left: -50px;
+    z-index: -3;
+    opacity: 0.1;
+  }
+  .after .active-3 {
+    animation-name: waves;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-delay: 0.9s;
+  }
+  
+  .comp-win .wave-1 {
+    position: absolute;
+    border-radius: 50%;
+    height: 230px;
+    width: 230px;
+    background: #222;
+    top: 58px;
+    right: -12px;
+    z-index: -1;
+    opacity: 0.5;
+  }
+  
+  .comp-win .wave-2 {
+    position: absolute;
+    border-radius: 50%;
+    height: 270px;
+    width: 270px;
+    background: #222;
+    top: 38px;
+    right: -32px;
+    z-index: -2;
+    opacity: 0.3;
+  }
+  
+  .comp-win .wave-3 {
+    position: absolute;
+    border-radius: 50%;
+    height: 300px;
+    width: 300px;
+    background: #222;
+    top: 27px;
+    right: -45px;
+    z-index: -3;
+    opacity: 0.5;
+  }
+  
+  .player-win {
+    opacity: 0;
+    animation-duration: 0.2s;
+    animation-delay: 1.9s;
+    animation-fill-mode: forwards;
+  }
+  
+  .comp-win {
+    opacity: 0;
+    animation-duration: 1s;
+    animation-delay: 1.9s;
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes waves {
+    0% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+  }
+  
+  .player p {
+    margin-bottom: 15px;
+  }
+  .computer p {
+    margin-bottom: 15px;
+  }
+  
+  .computer {
+    position: relative;
+    justify-self: center;
+  }
+  
+  .computer .empty {
+    width: 100px;
+    height: 100px;
+    background: #222;
+    opacity: 0.5;
+    border-radius: 50%;
+    position: absolute;
+    top: 95px;
+    left: 50px;
+    z-index: -1;
+  }
+  
+  .after .mid {
+    opacity: 0;
+    padding: 20px;
+    animation-delay: 2.3s;
+    animation-duration: 0.8s;
+    animation-fill-mode: forwards;
+    text-align: center;
+    z-index: 1;
+  }
+  
+  .mid p {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  
+  .mid button {
+    padding: 10px 20px;
+  }
+  
+  .under {
+    display: none;
+    z-index: 1;
+  }
+  
+  @keyframes show {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes width {
+    0% {
+      max-width: 450px;
+    }
+    100% {
+      max-width: 600px;
+    }
+  }
+  
+  .button {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    z-index: 1;
+  }
+  
+  @media screen and (max-width: 751px) {
+    .player-win .wave-3 {
+      display: none;
+    }
+    .player-win .wave-2 {
+      display: none;
+    }
+    .player-win .wave-1 {
+      height: 180px;
+      width: 180px;
+      top: 57px;
+      right: -30px;
+    }
+  
+    .comp-win .wave-3 {
+      display: none;
+    }
+    .comp-win .wave-2 {
+      display: none;
+    }
+    .comp-win .wave-1 {
+      height: 180px;
+      width: 180px;
+      top: 57px;
+      right: -30px;
+    }
+    @keyframes waves {
+      0% {
+        opacity: 0.5;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  }
+  
+  @media screen and (max-width: 687px) {
+    .computer .empty {
+      top: 85px;
+      left: 27px;
+    }
+    .paper {
+      height: 150px;
+      width: 150px;
+    }
+    .scissors {
+      height: 150px;
+      width: 150px;
+    }
+    .rock {
+      height: 150px;
+      width: 150px;
+    }
+  
+    .innerBorder {
+      height: 100px;
+      width: 100px;
+    }
+    .after .mid {
+      padding: 15px;
+      width: 30%;
+    }
+  
+    .mid p {
+      font-size: 2rem;
+    }
+  
+    .mid button {
+      padding: 10px 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+  
+  @media screen and (max-width: 623px) {
+    @keyframes width {
+      0% {
+        max-width: 450px;
+      }
+      100% {
+        max-width: 450px;
+      }
+    }
+    .after .mid {
+      display: none;
+    }
+    .under {
+      display: block !important;
+      z-index: 2000 !important;
+    }
+    .under button {
+      width: 60%;
+    }
+  
+    .mid p {
+      font-size: 2.8rem;
+    }
+  
+    .after .mid {
+      padding: 15px;
+      width: 80%;
+      margin: auto;
+      text-align: center;
+    }
+  
+    .button {
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+  }
+  
+  @media screen and (max-width: 415px) {
+    main {
+      max-width: 320px !important;
+    }
+    .rules {
+      width: 100vw;
+      height: 100vh;
+    }
+    .paper {
+      height: 120px;
+      width: 120px;
+    }
+    .scissors {
+      height: 120px;
+      width: 120px;
+    }
+    .rock {
+      height: 120px;
+      width: 120px;
+    }
+  
+    .innerBorder {
+      height: 100px;
+      width: 100px;
+    }
+    .triangle {
+      height: 200px;
+      width: 200px;
+    }
+    .computer .empty {
+      left: 0;
+      right: 0;
+      top: 50px;
+      margin: auto;
+    }
+    .computer {
+      flex-basis: 50%;
+    }
+    .player {
+      flex-basis: 50%;
+    }
+    .player p {
+      font-size: 0.95rem;
+    }
+    .computer p {
+      font-size: 0.95rem;
+    }
+    .rules .image {
+      margin-top: 30px;
+    }
+    .logo {
+      width: 120px;
+    }
+  
+    .player-win .wave-1 {
+      height: 140px;
+      width: 140px;
+      top: 56px;
+      left: 10px;
+    }
+    .comp-win .wave-1 {
+      height: 140px;
+      width: 140px;
+      top: 54px;
+      right: 10px;
+    }
+  }
+    </style>
+  </head>
+  <body>
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="rules">
+        <div class="space">
+          <h2>RULES</h2>
+          <img class="close" src="images/icon-close.svg" alt="">
+        </div>
+        <div class="image">
+          <img src="images/image-rules.svg" alt="">
+        </div>
+      </div>
+      <header>
+       
+        <h1 class="logo" style="font-weight:700;font-size:35px;">Rock<br>Paper<br>Scissor</h1>
+        <div class="scoreBoard">
+          <p class="scoreText">SCORE</p>
+          <p id="score">0</p>
+        </div>
+      </header>
+
+      <main>
+        <div class="init">
+          <div class="top">
+            <div class="paper PA">
+              <div class="innerBorder">
+                <img src="images/icon-paper.svg" alt="">
+              </div>
+            </div>
+            <div class="scissors SC">
+              <div class="innerBorder">
+                <img src="images/icon-scissors.svg" alt=""> 
+              </div>
+            </div>
+          </div>
+          <div class="bottom">
+            <div class="rock RK">
+              <div class="innerBorder">
+                <img src="images/icon-rock.svg" alt="">
+              </div>
+            </div>
+          </div>
+          <img class="triangle" src="images/bg-triangle.svg" alt="">
+        </div>
+      </main>
+      <section class="after">
+        <div class="space">
+          <div class="player">
+            <p>YOU PICKED</p>
+            <div class="image">
+              <div class="outerBorder">
+                <div class="innerBorder">
+                  <div class="img"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mid">
+            <p class="result"></p>
+            <button class="playAgain">PLAY AGAIN</button>
+          </div>
+          <div class="computer">
+            <p>THE HOUSE PICKED</p>
+            <div class="empty"></div>
+            <div class="image">
+              <div class="outerBorderComp">
+                <div class="innerBorder"><div class="img"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mid under">
+          <p class="result"></p>
+          <button class="playAgain">PLAY AGAIN</button>
+        </div>
+        <div class="player-win">
+          <div class="wave-1 active-1"></div>
+          <div class="wave-2 active-2"></div>
+          <div class="wave-3 active-3"></div>
+        </div>
+        <div class="comp-win">
+          <div class="wave-1 active-1"></div>
+          <div class="wave-2 active-2"></div>
+          <div class="wave-3 active-3"></div>
+        </div>
+      </section>
+      <button class="button">RULES</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/script.js"></script>
+    <script> 
+      var rulesBtn = $(".button");
+      var rules = $(".rules");
+      var overlay = $(".overlay");
+      var rock = $(".RK");
+      var scissors = $(".SC");
+      var paper = $(".PA");
+      var outerBorder = $(".after .player .outerBorder");
+      var outerBorderComp = $(".after .computer .outerBorderComp");
+      var img = $(".after .player .innerBorder .img");
+      var compAction = $(".after .computer .innerBorder .img");
+      var compImg = $(".after .computer .image");
+      var after = $(".after");
+      var mid = $(".after .mid");
+      var result = document.querySelectorAll(".result");
+      var scoreText = document.getElementById("score");
+      var score = 0;
+      var playAgain = document.querySelectorAll(".playAgain");
+      var compWin = $(".player-win");
+      var compWin = $(".comp-win");
+      
+      const randPlay = (compAction, compImg, outerBorderComp) => {
+        var play = ["rock", "paper", "scissors"];
+        var rand = play[Math.floor(Math.random() * 3)];
+        if (rand === "rock") {
+          outerBorderComp.removeClass("paper");
+          outerBorderComp.removeClass("scissors");
+          outerBorderComp.addClass("rock");
+          compAction.html(`<img src="images/icon-rock.svg" alt="" />`);
+          compImg.css("animationName", "show");
+        } else if (rand === "paper") {
+          outerBorderComp.removeClass("rock");
+          outerBorderComp.removeClass("scissors");
+          outerBorderComp.addClass("paper");
+          compAction.html(`<img src="images/icon-paper.svg" alt="" />`);
+          compImg.css("animationName", "show");
+        } else if (rand === "scissors") {
+          outerBorderComp.removeClass("paper");
+          outerBorderComp.removeClass("rock");
+          outerBorderComp.addClass("scissors");
+          compAction.html(`<img src="images/icon-scissors.svg" alt="" />`);
+          compImg.css("animationName", "show");
+        }
+        after.css("animationName", "width");
+        mid.css("animationName", "show");
+        return rand;
+      };
+      
+      const userPlay = (type) => {
+        var dir = `images/icon-${type}.svg`;
+        $("main").css("display", "none");
+        $(".after").css("display", "block");
+        outerBorder.addClass(type);
+        if (type === "rock") {
+          outerBorder.removeClass("scissors");
+          outerBorder.removeClass("paper");
+        } else if (type === "paper") {
+          outerBorder.removeClass("scissors");
+          outerBorder.removeClass("rock");
+        } else if (type === "scissors") {
+          outerBorder.removeClass("paper");
+          outerBorder.removeClass("rock");
+        }
+        img.html(`<img src=${dir} alt="" />`);
+      };
+      
+      const compare = (userPlay, randPlay) => {
+       
+        if (userPlay === "rock" && randPlay === "scissors") {
+          score++;
+          scoreText.textContent = `${score}`;
+          $(".player-win").css("animationName", "show");
+          $(".comp-win").css("animationName", "none");
+          return "YOU WIN";
+        } else if (userPlay === "scissors" && randPlay === "paper") {
+          score++;
+          scoreText.textContent = `${score}`;
+          $(".player-win").css("animationName", "show");
+          $(".comp-win").css("animationName", "none");
+          return "YOU WIN";
+        } else if (userPlay === "paper" && randPlay === "rock") {
+          score++;
+          scoreText.textContent = `${score}`;
+          $(".player-win").css("animationName", "show");
+          $(".comp-win").css("animationName", "none");
+          return "YOU WIN";
+        } else if (userPlay === "rock" && randPlay === "paper") {
+          score--;
+          scoreText.textContent = `${score}`;
+          $(".comp-win").css("animationName", "show");
+          $(".player-win").css("animationName", "none");
+          return "YOU LOSE";
+        } else if (userPlay === "paper" && randPlay === "scissors") {
+          score--;
+          scoreText.textContent = `${score}`;
+          $(".comp-win").css("animationName", "show");
+          $(".player-win").css("animationName", "none");
+          return "YOU LOSE";
+        } else if (userPlay === "scissors" && randPlay === "rock") {
+          score--;
+          scoreText.textContent = `${score}`;
+          $(".comp-win").css("animationName", "show");
+          $(".player-win").css("animationName", "none");
+          return "YOU LOSE";
+        } else if (userPlay === randPlay) {
+          $(".comp-win").css("animationName", "none");
+          $(".player-win").css("animationName", "none");
+          score = score;
+          scoreText.textContent = `${score}`;
+          return "TIE";
+        }
+      };
+      
+      rulesBtn.click(() => {
+        rules.css("animationName", "drop");
+        overlay.css("display", "block");
+      });
+      
+      $(".close").click(() => {
+        rules.css("animationName", "slideUp");
+        overlay.css("display", "none");
+      });
+      
+      rock.click(() => {
+        scoreText.style.opacity = "0";
+        scoreText.style.animationName = "show";
+        userPlay("rock");
+        var comp = randPlay(compAction, compImg, outerBorderComp);
+        var text = `${compare("rock", comp)}`;
+        result[0].textContent = text;
+        result[1].textContent = text;
+      });
+      
+      scissors.click(() => {
+        scoreText.style.opacity = "0";
+        scoreText.style.animationName = "show";
+        userPlay("scissors");
+        var comp = randPlay(compAction, compImg, outerBorderComp);
+        var text = `${compare("scissors", comp)}`;
+        result[0].textContent = text;
+        result[1].textContent = text;
+      });
+      
+      paper.click(() => {
+        scoreText.style.opacity = "0";
+        scoreText.style.animationName = "show";
+        userPlay("paper");
+        var comp = randPlay(compAction, compImg, outerBorderComp);
+        var text = `${compare("paper", comp)}`;
+        result[0].textContent = text;
+        result[1].textContent = text;
+      });
+      
+      playAgain[0].addEventListener("click", () => {
+        scoreText.style.animationName = "none";
+        scoreText.style.opacity = "1";
+        $("main").css("display", "block");
+        $(".after").css("display", "none");
+        
+      });
+      
+      playAgain[1].addEventListener("click", () => {
+        scoreText.style.animationName = "none";
+        scoreText.style.opacity = "1";
+        $("main").css("display", "block");
+        $(".after").css("display", "none");
+        
+      });
+    </script> 
+  </body>
+</html>
